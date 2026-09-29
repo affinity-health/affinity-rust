@@ -1,8 +1,8 @@
-# Rust SDK proposal
+# Rust SDK guide
 
-> **Proposed interface.**
-  These examples describe the SDK we plan to build. They are for review and do not run against the
-  current release. Package versions and migration steps will follow approval.
+> **Unreleased SDK update.**
+  These examples match the new SDK implementation in the repository. They are not available in the
+  current published release yet. Release versions and installation updates will follow.
 
 
 Async Rust applications. Request examples belong inside a function that returns a Result. [Source repository](https://github.com/affinity-health/affinity-rust) · [All SDKs](https://docs.joinaffinityai.com/guides/reference/sdks/)
@@ -87,7 +87,7 @@ Supply your own persisted key when retrying across calls or process restarts.
 
 ```rust
 let patient = practice.patients.create(PatientCreateParams {
-    name: PatientName { first: "Alex".into(), last: "Example".into() },
+    name: PatientName { first: "Alex".into(), last: "Example".into(), ..Default::default() },
     date_of_birth: "1990-01-01".into(),
     ..Default::default()
 }, None).await?;
@@ -101,6 +101,8 @@ practice.patients.update(&patient.id, PatientUpdateParams {
     status: Some("archived".into()), ..Default::default()
 }, None).await?;
 ```
+
+The SDK maps `archived` to the API’s `inactive` status. Returned records use `inactive`.
 
 Archive patients whose records you need to retain. Permanent deletion is available only for patients without order history. No explicit idempotency key is needed.
 
@@ -143,6 +145,7 @@ practice.orders.sign(
         prescriber: PrescriberSelector::id(&review.prescriber_id),
         expected_revision: review.order_revision.clone(),
         signature_attestation: review.signature_attestation,
+        ..Default::default()
     },
     Some(RequestOptions::new().idempotency_key(&job.sign_order_key)),
 ).await?;

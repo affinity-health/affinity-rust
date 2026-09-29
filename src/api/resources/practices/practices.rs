@@ -23,9 +23,9 @@ impl PracticesClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn list_practices(
+    pub async fn list(
         &self,
-        request: &ListPracticesQueryRequest,
+        request: &PracticesListQueryRequest,
         options: Option<RequestOptions>,
     ) -> Result<ListPracticesResponse, ApiError> {
         self.http_client
@@ -53,7 +53,7 @@ impl PracticesClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn create_practice(
+    pub async fn create(
         &self,
         request: &CreatePracticeRequest,
         options: Option<RequestOptions>,
@@ -78,7 +78,7 @@ impl PracticesClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn get_practice(
+    pub async fn get(
         &self,
         practice_id: &str,
         options: Option<RequestOptions>,
@@ -103,12 +103,17 @@ impl PracticesClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn update_practice(
+    pub async fn update(
         &self,
         practice_id: &str,
         request: &UpdatePracticeRequest,
         options: Option<RequestOptions>,
     ) -> Result<UpdatePracticeResponse, ApiError> {
+        let mut options = options.unwrap_or_default();
+        if !options.additional_headers.keys().any(|key| key.eq_ignore_ascii_case("Idempotency-Key")) {
+            options.additional_headers.insert("Idempotency-Key".into(), uuid::Uuid::new_v4().to_string());
+        }
+        let options = Some(options); // affinity-sdk-auto-key
         self.http_client
             .execute_request(
                 Method::PATCH,

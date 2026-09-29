@@ -1,6 +1,6 @@
 [package]
 name = "affinity-health-sdk"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Rust client for the Affinity API"
 license = "MIT"
@@ -11,6 +11,10 @@ homepage = "https://github.com/affinity-health/affinity-rust"
 doctest = false
 
 [dependencies]
+futures-util = "0.3"
+percent-encoding = "2"
+httpdate = "1"
+uuid = { version = "1", features = ["v4"] }
 bytes = "1.0"
 futures = "0.3"
 reqwest = { version = "0.12", features = ["json", "stream", "gzip", "rustls-tls"], default-features = false }

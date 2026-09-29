@@ -22,10 +22,10 @@ impl LocationsClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn list_practice_locations(
+    pub async fn list(
         &self,
         practice_id: &str,
-        request: &ListPracticeLocationsQueryRequest,
+        request: &LocationsListQueryRequest,
         options: Option<RequestOptions>,
     ) -> Result<ListPracticeLocationsResponse, ApiError> {
         self.http_client
@@ -53,12 +53,17 @@ impl LocationsClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn create_practice_location(
+    pub async fn create(
         &self,
         practice_id: &str,
         request: &CreatePracticeLocationRequest,
         options: Option<RequestOptions>,
     ) -> Result<CreatePracticeLocationResponse, ApiError> {
+        let mut options = options.unwrap_or_default();
+        if !options.additional_headers.keys().any(|key| key.eq_ignore_ascii_case("Idempotency-Key")) {
+            options.additional_headers.insert("Idempotency-Key".into(), uuid::Uuid::new_v4().to_string());
+        }
+        let options = Some(options); // affinity-sdk-auto-key
         self.http_client
             .execute_request(
                 Method::POST,
@@ -79,7 +84,7 @@ impl LocationsClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn get_practice_location(
+    pub async fn get(
         &self,
         practice_id: &str,
         location_id: &str,
@@ -105,13 +110,18 @@ impl LocationsClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn update_practice_location(
+    pub async fn update(
         &self,
         practice_id: &str,
         location_id: &str,
         request: &UpdatePracticeLocationRequest,
         options: Option<RequestOptions>,
     ) -> Result<UpdatePracticeLocationResponse, ApiError> {
+        let mut options = options.unwrap_or_default();
+        if !options.additional_headers.keys().any(|key| key.eq_ignore_ascii_case("Idempotency-Key")) {
+            options.additional_headers.insert("Idempotency-Key".into(), uuid::Uuid::new_v4().to_string());
+        }
+        let options = Some(options); // affinity-sdk-auto-key
         self.http_client
             .execute_request(
                 Method::PATCH,
@@ -132,12 +142,17 @@ impl LocationsClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn archive_practice_location(
+    pub async fn archive(
         &self,
         practice_id: &str,
         location_id: &str,
         options: Option<RequestOptions>,
     ) -> Result<ArchivePracticeLocationResponse, ApiError> {
+        let mut options = options.unwrap_or_default();
+        if !options.additional_headers.keys().any(|key| key.eq_ignore_ascii_case("Idempotency-Key")) {
+            options.additional_headers.insert("Idempotency-Key".into(), uuid::Uuid::new_v4().to_string());
+        }
+        let options = Some(options); // affinity-sdk-auto-key
         self.http_client
             .execute_request(
                 Method::POST,

@@ -22,7 +22,7 @@ impl ApiKeysClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn create_platform_practice_api_key(
+    pub async fn create(
         &self,
         practice_id: &str,
         request: &CreatePlatformPracticeApiKeyRequest,
@@ -48,7 +48,7 @@ impl ApiKeysClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn get_api_access(
+    pub async fn get_access(
         &self,
         options: Option<RequestOptions>,
     ) -> Result<GetApiAccessResponse, ApiError> {

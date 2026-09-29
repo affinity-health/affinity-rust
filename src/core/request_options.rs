@@ -2,6 +2,11 @@ use std::collections::HashMap;
 /// Options for customizing individual requests
 #[derive(Debug, Clone, Default)]
 pub struct RequestOptions {
+pub practice_id:Option<String>,
+pub idempotency_key:Option<String>,
+pub organization_id:Option<String>,
+pub actor_id:Option<String>,
+pub actor_type:Option<String>,
     /// API key for authentication (overrides client-level API key)
     pub api_key: Option<String>,
     /// Bearer token for authentication (overrides client-level token)
@@ -174,3 +179,9 @@ mod tests {
         assert_eq!(opts.additional_query_params.len(), 1);
     }
 }
+
+impl RequestOptions{pub fn practice_id(mut self,value:impl Into<String>)->Self{self.practice_id=Some(value.into());self}
+pub fn idempotency_key(mut self,value:impl Into<String>)->Self{self.idempotency_key=Some(value.into());self}
+pub fn organization_id(mut self,value:impl Into<String>)->Self{self.organization_id=Some(value.into());self}
+pub fn actor_id(mut self,value:impl Into<String>)->Self{self.actor_id=Some(value.into());self}
+pub fn actor_type(mut self,value:impl Into<String>)->Self{self.actor_type=Some(value.into());self}}

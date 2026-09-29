@@ -16,9 +16,9 @@
 //!     let client = ApiClient::new(config).expect("Failed to build client");
 //!     client
 //!         .locations
-//!         .list_practice_locations(
+//!         .list(
 //!             &"prac_01j2y8m6jcc9tt24af5pw9x1bc".to_string(),
-//!             &ListPracticeLocationsQueryRequest {
+//!             &LocationsListQueryRequest {
 //!                 starting_after: Some("loc_01j2y8m6jcc9tt24af5pw9x1bc".to_string()),
 //!                 ending_before: Some("loc_01j2y8m6jcc9tt24af5pw9x1bc".to_string()),
 //!                 ..Default::default()
@@ -52,3 +52,6 @@ pub use config::*;
 pub use core::*;
 pub use environment::*;
 pub use error::{ApiError, BuildError};
+
+pub mod sdk;
+pub use sdk::{Affinity, SdkOptions, SdkError, models};

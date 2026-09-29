@@ -31,8 +31,9 @@ impl Default for ClientConfig {
             oauth_token_endpoint: None,
             oauth_token_exchange: None,
             timeout: Duration::from_secs(60),
-            max_retries: 3,
+            max_retries: 0,
             custom_headers: HashMap::from([
+                ("Affinity-Version".to_string(), "2026-09-28".to_string()),
                 ("X-Fern-Language".to_string(), "Rust".to_string()),
                 (
                     "X-Fern-SDK-Name".to_string(),

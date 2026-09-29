@@ -13,6 +13,6 @@ pub mod types;
 
 pub use resources::{
     AccountClient, ApiClient, ApiKeysClient, CatalogClient, LocationsClient, OrdersClient,
-    PatientsClient, PlatformPricingClient, PracticesClient, TeamClient, WebhooksClient,
+    PatientsClient, PharmaciesClient, PracticesClient, TeamClient, WebhooksClient,
 };
 pub use types::*;

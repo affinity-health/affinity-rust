@@ -22,9 +22,9 @@ impl AccountClient {
     /// # Returns
     ///
     /// JSON response from the API
-    pub async fn get_account(
+    pub async fn get(
         &self,
-        request: &GetAccountQueryRequest,
+        request: &AccountGetQueryRequest,
         options: Option<RequestOptions>,
     ) -> Result<GetAccountResponse, ApiError> {
         self.http_client

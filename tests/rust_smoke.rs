@@ -1,5 +1,5 @@
 use affinity_health_sdk::prelude::*;
-use std::{io::{Read, Write}, net::TcpListener, collections::HashMap};
+use std::{io::{Read, Write}, net::TcpListener};
 
 #[tokio::test]
 async fn transport_contract() {
@@ -25,12 +25,12 @@ async fn transport_contract() {
     });
     let client = ApiClient::new(ClientConfig {
         base_url: format!("http://{}", address), api_key: Some("synthetic-key".into()), max_retries: 0,
-        custom_headers: HashMap::from([("Affinity-Version".into(), "2026-09-28".into())]), ..Default::default()
+        ..Default::default()
     }).unwrap();
-    let page = client.orders.list_orders(&ListOrdersQueryRequest { limit: Some(2), starting_after: Some("ord_cursor".into()), ..Default::default() }, None).await.unwrap();
+    let page = client.orders.list(&OrdersListQueryRequest { limit: Some(2), starting_after: Some("ord_cursor".into()), ..Default::default() }, None).await.unwrap();
     assert!(page.data.is_empty()); assert!(!page.has_more);
     let request: CreateOrderRequest = serde_json::from_value(serde_json::json!({"practiceId":"prac_synthetic","patientId":"pat_synthetic","prescriptions":[]})).unwrap();
-    assert!(client.orders.create_order(&request, Some(RequestOptions::new().additional_header("Idempotency-Key", "stable-synthetic-key"))).await.is_err());
+    assert!(client.orders.create(&request, Some(RequestOptions::new().additional_header("Idempotency-Key", "stable-synthetic-key"))).await.is_err());
     let requests = worker.join().unwrap();
     assert!(requests[0].0.contains("limit=2")); assert!(requests[0].0.contains("startingAfter=ord_cursor"));
     for (headers, _) in &requests {

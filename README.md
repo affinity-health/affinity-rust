@@ -1,7 +1,9 @@
 # Affinity Rust SDK
 
+[Proposed SDK guide](docs/guide.md) · Review the next interface for practice keys, platforms, patient records, and order signing. These examples are not implemented yet.
+
 Generated client for the Affinity API, version `2026-09-28`. This is a source preview
-at `0.1.0`; the generated interface may change before a stable release.
+at `0.2.0`; the generated interface may change before a stable release.
 
 ## Install and use
 
@@ -27,8 +29,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         ]),
         ..Default::default()
     })?;
-    let page = client.orders.list_orders(
-        &ListOrdersQueryRequest { limit: Some(20), ..Default::default() },
+    let page = client.orders.list(
+        &OrdersListQueryRequest { limit: Some(20), ..Default::default() },
         None,
     ).await?;
     println!("{} orders", page.data.len());
@@ -67,3 +69,10 @@ The committed [OpenAPI contract](spec/affinity.openapi.json) is the source of tr
 [generation.json](generation.json) records the pinned Cloudflare Forge and Fern
 versions and source hash. Generation is maintained in Affinity's SDK pipeline.
 Do not edit generated models directly.
+
+## Guide
+
+Read the [Rust guide](https://docs.joinaffinityai.com/guides/reference/sdks/rust/) for patients, catalog items, writes, pagination, and errors.
+
+Version 0.2.0 defaults to API `2026-09-28`, no automatic retries, and a 60-second timeout.
+Explicit client and request options override these defaults. Custom HTTP transports manage their own timeout support.

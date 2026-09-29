@@ -30,20 +30,9 @@ let patient = api.patients.get(patient_id, None).await?;
 let items = api.catalog.items.list(CatalogItemListParams { limit: Some(20), ..Default::default() }, None).await?;
 ```
 
-For a recoverable update, pass your persisted key without a practice ID. `job` is your application's saved workflow record.
-
-```rust
-api.patients.update(
-    patient_id,
-    PatientUpdateParams { email: Some("alex@example.com".into()), ..Default::default() },
-    Some(RequestOptions::new().idempotency_key(&job.update_patient_key)),
-).await?;
-```
-
 ## With a platform key
 
 Pass the target practice with each practice-scoped request. Keep record data separate from request context and idempotency options.
-The update key below comes from your persisted workflow job.
 
 ```rust
 let options = RequestOptions::new().practice_id(practice_id);
@@ -51,14 +40,14 @@ let patients = api.patients.list(
     PatientListParams { limit: Some(20), ..Default::default() },
     Some(options.clone()),
 ).await?;
+
 let patient = api.patients.get(patient_id, Some(options)).await?;
 
 api.patients.update(
     patient_id,
     PatientUpdateParams { email: Some("alex@example.com".into()), ..Default::default() },
     Some(RequestOptions::new()
-        .practice_id(practice_id)
-        .idempotency_key(&job.update_patient_key)),
+        .practice_id(practice_id)),
 ).await?;
 ```
 
@@ -69,9 +58,11 @@ A conflicting practice ID produces an error. Scoping never grants access to anot
 
 ```rust
 let practice = api.for_practice(practice_id);
+
 let patients = practice.patients.list(
     PatientListParams { limit: Some(20), ..Default::default() }, None,
 ).await?;
+
 let items = practice.catalog.items.list(
     CatalogItemListParams { limit: Some(20), ..Default::default() }, None,
 ).await?;
@@ -90,34 +81,35 @@ let patient = practice.patients.create(PatientCreateParams {
     date_of_birth: "1990-01-01".into(),
     ..Default::default()
 }, None).await?;
+
 let saved = practice.patients.get(&patient.id, None).await?;
 practice.patients.update(&patient.id, PatientUpdateParams {
     email: Some("alex@example.com".into()), ..Default::default()
 }, None).await?;
+
 practice.patients.update(&patient.id, PatientUpdateParams {
     status: Some("archived".into()), ..Default::default()
 }, None).await?;
 ```
 
-Archive patients whose records you need to retain. Permanent deletion is available only for patients without order history and requires an explicit key.
+Archive patients whose records you need to retain. Permanent deletion is available only for patients without order history. No explicit idempotency key is needed.
 
 ```rust
-practice.patients.delete(patient_id,
-    Some(RequestOptions::new().idempotency_key(&job.delete_patient_key)),
-).await?;
+practice.patients.delete(patient_id, None).await?;
 ```
 
 ## Create an order draft
 
 `draft` is your application's prepared prescription data, using catalog and prescribing options from this practice.
 An order contains 1–20 complete prescriptions for one patient. This example creates an unsigned draft.
+It shows a platform call without a scoped client: practice context and the persisted key belong together in request options.
 
 `job` is your persisted workflow record. Generate and save a unique key for each action before making its first request.
 
 ```rust
-let order = practice.orders.create(
+let order = api.orders.create(
     OrderCreateParams { patient_id: patient_id.into(), prescriptions: draft.prescriptions.clone(), ..Default::default() },
-    Some(RequestOptions::new().idempotency_key(&job.create_order_key)),
+    Some(RequestOptions::new().practice_id(practice_id).idempotency_key(&job.create_order_key)),
 ).await?;
 ```
 
@@ -137,6 +129,7 @@ practice.orders.sign(
     },
     Some(RequestOptions::new().idempotency_key(&job.sign_order_key)),
 ).await?;
+
 let submission = practice.orders.submit(order_id,
     Some(RequestOptions::new().idempotency_key(&job.submit_order_key)),
 ).await?;
@@ -158,6 +151,7 @@ The iterator fetches pages as you consume records; it does not load the full col
 let page = practice.patients.list(
     PatientListParams { limit: Some(20), ..Default::default() }, None,
 ).await?;
+
 if page.has_more {
     if let Some(last) = page.data.last() {
         let next = practice.patients.list(PatientListParams {
@@ -169,6 +163,7 @@ if page.has_more {
 let mut patients = practice.patients.iterate(
     PatientListParams { limit: Some(100), ..Default::default() }, None,
 );
+
 while let Some(patient) = patients.try_next().await? {
     sync_patient(patient).await?;
 }
@@ -201,6 +196,7 @@ The webhook list belongs to the platform itself. Access to another organization'
 let practices = api.practices.list(
     PracticeListParams { limit: Some(20), ..Default::default() }, None,
 ).await?;
+
 let selected = api.practices.get(practice_id, None).await?;
 let endpoints = api.webhooks.endpoints.list(
     WebhookEndpointListParams { limit: Some(20), ..Default::default() }, None,

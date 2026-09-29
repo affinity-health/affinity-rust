@@ -1,0 +1,46 @@
+pub use crate::prelude::*;
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum ListOrdersResponseDataItemFulfillmentsItemShipmentsItemSource {
+    PharmacyWebhook,
+    Pharmacy,
+    System,
+    /// This variant is used for forward compatibility.
+    /// If the server sends a value not recognized by the current SDK version,
+    /// it will be captured here with the raw string value.
+    __Unknown(String),
+}
+impl Serialize for ListOrdersResponseDataItemFulfillmentsItemShipmentsItemSource {
+    fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        match self {
+            Self::PharmacyWebhook => serializer.serialize_str("pharmacy_webhook"),
+            Self::Pharmacy => serializer.serialize_str("pharmacy"),
+            Self::System => serializer.serialize_str("system"),
+            Self::__Unknown(val) => serializer.serialize_str(val),
+        }
+    }
+}
+
+impl<'de> Deserialize<'de> for ListOrdersResponseDataItemFulfillmentsItemShipmentsItemSource {
+    fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        let value = String::deserialize(deserializer)?;
+        match value.as_str() {
+            "pharmacy_webhook" => Ok(Self::PharmacyWebhook),
+            "pharmacy" => Ok(Self::Pharmacy),
+            "system" => Ok(Self::System),
+            _ => Ok(Self::__Unknown(value)),
+        }
+    }
+}
+
+impl fmt::Display for ListOrdersResponseDataItemFulfillmentsItemShipmentsItemSource {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::PharmacyWebhook => write!(f, "pharmacy_webhook"),
+            Self::Pharmacy => write!(f, "pharmacy"),
+            Self::System => write!(f, "system"),
+            Self::__Unknown(val) => write!(f, "{}", val),
+        }
+    }
+}

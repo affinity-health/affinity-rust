@@ -1,0 +1,50 @@
+pub use crate::prelude::*;
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq, Hash)]
+pub struct CreateOrderBatchRequestOrdersItemOtcItemsItem {
+    #[serde(rename = "catalogItemId")]
+    #[serde(default)]
+    pub catalog_item_id: String,
+    #[serde(default)]
+    pub quantity: i64,
+}
+
+impl CreateOrderBatchRequestOrdersItemOtcItemsItem {
+    pub fn builder() -> CreateOrderBatchRequestOrdersItemOtcItemsItemBuilder {
+        <CreateOrderBatchRequestOrdersItemOtcItemsItemBuilder as Default>::default()
+    }
+}
+
+#[derive(Clone, PartialEq, Default, Debug)]
+#[non_exhaustive]
+pub struct CreateOrderBatchRequestOrdersItemOtcItemsItemBuilder {
+    catalog_item_id: Option<String>,
+    quantity: Option<i64>,
+}
+
+impl CreateOrderBatchRequestOrdersItemOtcItemsItemBuilder {
+    pub fn catalog_item_id(mut self, value: impl Into<String>) -> Self {
+        self.catalog_item_id = Some(value.into());
+        self
+    }
+
+    pub fn quantity(mut self, value: i64) -> Self {
+        self.quantity = Some(value);
+        self
+    }
+
+    /// Consumes the builder and constructs a [`CreateOrderBatchRequestOrdersItemOtcItemsItem`].
+    /// This method will fail if any of the following fields are not set:
+    /// - [`catalog_item_id`](CreateOrderBatchRequestOrdersItemOtcItemsItemBuilder::catalog_item_id)
+    /// - [`quantity`](CreateOrderBatchRequestOrdersItemOtcItemsItemBuilder::quantity)
+    pub fn build(self) -> Result<CreateOrderBatchRequestOrdersItemOtcItemsItem, BuildError> {
+        Ok(CreateOrderBatchRequestOrdersItemOtcItemsItem {
+            catalog_item_id: self
+                .catalog_item_id
+                .ok_or_else(|| BuildError::missing_field("catalog_item_id"))?,
+            quantity: self
+                .quantity
+                .ok_or_else(|| BuildError::missing_field("quantity"))?,
+        })
+    }
+}

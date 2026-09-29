@@ -5,7 +5,7 @@
   current release. Package versions and migration steps will follow approval.
 
 
-Async Rust applications. Request examples belong inside a function that returns a Result. [Source repository](https://github.com/affinity-health/affinity-rust) · [All SDKs](https://docs.joinaffinityai.com/guides/reference/sdks/) · [Shared conventions](https://docs.joinaffinityai.com/guides/reference/sdks/methods/)
+Async Rust applications. Request examples belong inside a function that returns a Result. [Source repository](https://github.com/affinity-health/affinity-rust) · [All SDKs](https://docs.joinaffinityai.com/guides/reference/sdks/)
 
 ## Connect
 
@@ -25,9 +25,17 @@ The resource IDs below come from records in that practice.
 Each section is a separate usage example, not one script to concatenate.
 
 ```rust
-let patients = api.patients.list(PatientListParams { limit: Some(20), ..Default::default() }, None).await?;
+let patients = api.patients.list(
+    PatientListParams { limit: Some(20), ..Default::default() },
+    None,
+).await?;
+
 let patient = api.patients.get(patient_id, None).await?;
-let items = api.catalog.items.list(CatalogItemListParams { limit: Some(20), ..Default::default() }, None).await?;
+let items = api.catalog.items.list(
+    CatalogItemListParams { limit: Some(20), ..Default::default() },
+    None,
+).await?;
+
 ```
 
 ## With a platform key
@@ -49,6 +57,7 @@ api.patients.update(
     Some(RequestOptions::new()
         .practice_id(practice_id)),
 ).await?;
+
 ```
 
 ## Scope a workflow once
@@ -66,6 +75,7 @@ let patients = practice.patients.list(
 let items = practice.catalog.items.list(
     CatalogItemListParams { limit: Some(20), ..Default::default() }, None,
 ).await?;
+
 ```
 
 The following examples use this scoped client. A practice-key client supports the same calls without the scoping step.
@@ -108,9 +118,16 @@ It shows a platform call without a scoped client: practice context and the persi
 
 ```rust
 let order = api.orders.create(
-    OrderCreateParams { patient_id: patient_id.into(), prescriptions: draft.prescriptions.clone(), ..Default::default() },
-    Some(RequestOptions::new().practice_id(practice_id).idempotency_key(&job.create_order_key)),
+    OrderCreateParams {
+        patient_id: patient_id.into(),
+        prescriptions: draft.prescriptions.clone(),
+        ..Default::default()
+    },
+    Some(RequestOptions::new()
+        .practice_id(practice_id)
+        .idempotency_key(&job.create_order_key)),
 ).await?;
+
 ```
 
 ## Sign and submit
@@ -133,6 +150,7 @@ practice.orders.sign(
 let submission = practice.orders.submit(order_id,
     Some(RequestOptions::new().idempotency_key(&job.submit_order_key)),
 ).await?;
+
 ```
 
 Use separate keys for creating, signing, and submitting. After an uncertain response, retry the same action with the same key and unchanged data.
@@ -201,9 +219,10 @@ let selected = api.practices.get(practice_id, None).await?;
 let endpoints = api.webhooks.endpoints.list(
     WebhookEndpointListParams { limit: Some(20), ..Default::default() }, None,
 ).await?;
+
 ```
 
 ## More resources
 
 Use the same conventions for addresses, allergies, locations, team members, and nested order resources.
-[Resource directory](https://docs.joinaffinityai.com/guides/reference/sdks/methods/) · [API reference](https://docs.joinaffinityai.com/api/) · [Webhooks](https://docs.joinaffinityai.com/guides/webhooks/)
+[API reference](https://docs.joinaffinityai.com/api/) · [Webhooks](https://docs.joinaffinityai.com/guides/webhooks/)

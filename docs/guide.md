@@ -1,11 +1,14 @@
 # Rust SDK guide
 
-> **Unreleased SDK update.**
-  These examples match the new SDK implementation in the repository. They are not available in the
-  current published release yet. Release versions and installation updates will follow.
-
-
 Async Rust applications. Request examples belong inside a function that returns a Result. [Source repository](https://github.com/affinity-health/affinity-rust) · [All SDKs](https://docs.joinaffinityai.com/guides/reference/sdks/)
+
+## Install
+
+```sh
+cargo add affinity-health-sdk --git https://github.com/affinity-health/affinity-rust
+```
+
+For reproducible builds, pin the Git dependency to a commit.
 
 ## Connect
 

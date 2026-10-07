@@ -1,6 +1,6 @@
 pub use crate::prelude::*;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct AddOrderPrescriptionResponse {
     /// Opaque revision of the complete order prescription set. Send the revision you reviewed as expectedRevision; never replace it automatically after a conflict.
     #[serde(default)]
@@ -10,7 +10,7 @@ pub struct AddOrderPrescriptionResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub external_order_id: Option<String>,
     #[serde(default)]
-    pub metadata: AddOrderPrescriptionResponseMetadata,
+    pub metadata: HashMap<String, Option<AddOrderPrescriptionResponseMetadataValue>>,
     #[serde(rename = "orderId")]
     #[serde(default)]
     pub order_id: String,
@@ -33,7 +33,7 @@ pub struct AddOrderPrescriptionResponseBuilder {
     revision: Option<String>,
     object: Option<AddOrderPrescriptionResponseObject>,
     external_order_id: Option<String>,
-    metadata: Option<AddOrderPrescriptionResponseMetadata>,
+    metadata: Option<HashMap<String, Option<AddOrderPrescriptionResponseMetadataValue>>>,
     order_id: Option<String>,
     prescription_id: Option<String>,
     prescriptions: Option<Vec<AddOrderPrescriptionResponsePrescriptionsItem>>,
@@ -55,7 +55,10 @@ impl AddOrderPrescriptionResponseBuilder {
         self
     }
 
-    pub fn metadata(mut self, value: AddOrderPrescriptionResponseMetadata) -> Self {
+    pub fn metadata(
+        mut self,
+        value: HashMap<String, Option<AddOrderPrescriptionResponseMetadataValue>>,
+    ) -> Self {
         self.metadata = Some(value);
         self
     }

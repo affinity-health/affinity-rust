@@ -1,0 +1,2 @@
+pub mod catalog_presentation_prices;
+pub use catalog_presentation_prices::PresentationPricesClient;

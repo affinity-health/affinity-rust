@@ -10,6 +10,10 @@ pub enum ListCatalogItemsResponseDataItemPricingBasis {
         quantity: ListCatalogItemsResponseDataItemPricingBasisItemQuantity,
         #[serde(default)]
         unit: String,
+        #[serde(rename = "quantityPrices")]
+        #[serde(skip_serializing_if = "Option::is_none")]
+        quantity_prices:
+            Option<Vec<ListCatalogItemsResponseDataItemPricingBasisItemQuantityPricesItem>>,
     },
 
     #[serde(rename = "package")]
@@ -41,7 +45,11 @@ impl ListCatalogItemsResponseDataItemPricingBasis {
         quantity: ListCatalogItemsResponseDataItemPricingBasisItemQuantity,
         unit: String,
     ) -> Self {
-        Self::Item { quantity, unit }
+        Self::Item {
+            quantity,
+            unit,
+            quantity_prices: None,
+        }
     }
 
     pub fn package(quantity: String, unit: String) -> Self {
@@ -53,6 +61,18 @@ impl ListCatalogItemsResponseDataItemPricingBasis {
         unit: String,
     ) -> Self {
         Self::Unit { quantity, unit }
+    }
+
+    pub fn item_with_quantity_prices(
+        quantity: ListCatalogItemsResponseDataItemPricingBasisItemQuantity,
+        unit: String,
+        quantity_prices: Vec<ListCatalogItemsResponseDataItemPricingBasisItemQuantityPricesItem>,
+    ) -> Self {
+        Self::Item {
+            quantity,
+            unit,
+            quantity_prices: Some(quantity_prices),
+        }
     }
 
     pub fn unknown(value: serde_json::Value) -> Self {

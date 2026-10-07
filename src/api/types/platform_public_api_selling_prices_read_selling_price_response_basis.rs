@@ -10,6 +10,11 @@ pub enum PlatformPublicApiSellingPricesReadSellingPriceResponseBasis {
         quantity: PlatformPublicApiSellingPricesReadSellingPriceResponseBasisItemQuantity,
         #[serde(default)]
         unit: String,
+        #[serde(rename = "quantityPrices")]
+        #[serde(skip_serializing_if = "Option::is_none")]
+        quantity_prices: Option<
+            Vec<PlatformPublicApiSellingPricesReadSellingPriceResponseBasisItemQuantityPricesItem>,
+        >,
     },
 
     #[serde(rename = "package")]
@@ -41,7 +46,11 @@ impl PlatformPublicApiSellingPricesReadSellingPriceResponseBasis {
         quantity: PlatformPublicApiSellingPricesReadSellingPriceResponseBasisItemQuantity,
         unit: String,
     ) -> Self {
-        Self::Item { quantity, unit }
+        Self::Item {
+            quantity,
+            unit,
+            quantity_prices: None,
+        }
     }
 
     pub fn package(quantity: String, unit: String) -> Self {
@@ -53,6 +62,20 @@ impl PlatformPublicApiSellingPricesReadSellingPriceResponseBasis {
         unit: String,
     ) -> Self {
         Self::Unit { quantity, unit }
+    }
+
+    pub fn item_with_quantity_prices(
+        quantity: PlatformPublicApiSellingPricesReadSellingPriceResponseBasisItemQuantity,
+        unit: String,
+        quantity_prices: Vec<
+            PlatformPublicApiSellingPricesReadSellingPriceResponseBasisItemQuantityPricesItem,
+        >,
+    ) -> Self {
+        Self::Item {
+            quantity,
+            unit,
+            quantity_prices: Some(quantity_prices),
+        }
     }
 
     pub fn unknown(value: serde_json::Value) -> Self {

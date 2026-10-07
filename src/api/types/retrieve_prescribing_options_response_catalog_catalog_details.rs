@@ -2,6 +2,11 @@ pub use crate::prelude::*;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub struct RetrievePrescribingOptionsResponseCatalogCatalogDetails {
+    /// Confirmed physical containers and contents. Empty or absent means container count cannot be inferred from dispense quantity.
+    #[serde(rename = "packageComponents")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub package_components:
+        Option<Vec<RetrievePrescribingOptionsResponseCatalogCatalogDetailsPackageComponentsItem>>,
     #[serde(default)]
     pub attributes:
         HashMap<String, RetrievePrescribingOptionsResponseCatalogCatalogDetailsAttributesValue>,
@@ -18,6 +23,8 @@ impl RetrievePrescribingOptionsResponseCatalogCatalogDetails {
 #[derive(Clone, PartialEq, Default, Debug)]
 #[non_exhaustive]
 pub struct RetrievePrescribingOptionsResponseCatalogCatalogDetailsBuilder {
+    package_components:
+        Option<Vec<RetrievePrescribingOptionsResponseCatalogCatalogDetailsPackageComponentsItem>>,
     attributes: Option<
         HashMap<String, RetrievePrescribingOptionsResponseCatalogCatalogDetailsAttributesValue>,
     >,
@@ -25,6 +32,14 @@ pub struct RetrievePrescribingOptionsResponseCatalogCatalogDetailsBuilder {
 }
 
 impl RetrievePrescribingOptionsResponseCatalogCatalogDetailsBuilder {
+    pub fn package_components(
+        mut self,
+        value: Vec<RetrievePrescribingOptionsResponseCatalogCatalogDetailsPackageComponentsItem>,
+    ) -> Self {
+        self.package_components = Some(value);
+        self
+    }
+
     pub fn attributes(
         mut self,
         value: HashMap<
@@ -52,6 +67,7 @@ impl RetrievePrescribingOptionsResponseCatalogCatalogDetailsBuilder {
         self,
     ) -> Result<RetrievePrescribingOptionsResponseCatalogCatalogDetails, BuildError> {
         Ok(RetrievePrescribingOptionsResponseCatalogCatalogDetails {
+            package_components: self.package_components,
             attributes: self
                 .attributes
                 .ok_or_else(|| BuildError::missing_field("attributes"))?,

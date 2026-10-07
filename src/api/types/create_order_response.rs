@@ -12,7 +12,7 @@ pub struct CreateOrderResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub external_order_id: Option<String>,
     #[serde(default)]
-    pub metadata: CreateOrderResponseMetadata,
+    pub metadata: HashMap<String, Option<CreateOrderResponseMetadataValue>>,
     #[serde(rename = "createdAt")]
     #[serde(default)]
     pub created_at: String,
@@ -47,7 +47,7 @@ pub struct CreateOrderResponseBuilder {
     revision: Option<String>,
     otc_items: Option<Vec<CreateOrderResponseOtcItemsItem>>,
     external_order_id: Option<String>,
-    metadata: Option<CreateOrderResponseMetadata>,
+    metadata: Option<HashMap<String, Option<CreateOrderResponseMetadataValue>>>,
     created_at: Option<String>,
     id: Option<String>,
     livemode: Option<bool>,
@@ -75,7 +75,10 @@ impl CreateOrderResponseBuilder {
         self
     }
 
-    pub fn metadata(mut self, value: CreateOrderResponseMetadata) -> Self {
+    pub fn metadata(
+        mut self,
+        value: HashMap<String, Option<CreateOrderResponseMetadataValue>>,
+    ) -> Self {
         self.metadata = Some(value);
         self
     }

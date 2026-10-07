@@ -8,7 +8,7 @@ pub enum Environment {
 impl Environment {
     pub fn url(&self) -> &'static str {
         match self {
-            Self::Production => "https://api.joinaffinityai.com",
+            Self::Production => "https://api.affinityrx.com",
         }
     }
 }

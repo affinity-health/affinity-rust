@@ -10,6 +10,11 @@ pub enum RetrievePrescribingOptionsResponseCatalogPricingBasis {
         quantity: RetrievePrescribingOptionsResponseCatalogPricingBasisItemQuantity,
         #[serde(default)]
         unit: String,
+        #[serde(rename = "quantityPrices")]
+        #[serde(skip_serializing_if = "Option::is_none")]
+        quantity_prices: Option<
+            Vec<RetrievePrescribingOptionsResponseCatalogPricingBasisItemQuantityPricesItem>,
+        >,
     },
 
     #[serde(rename = "package")]
@@ -41,7 +46,11 @@ impl RetrievePrescribingOptionsResponseCatalogPricingBasis {
         quantity: RetrievePrescribingOptionsResponseCatalogPricingBasisItemQuantity,
         unit: String,
     ) -> Self {
-        Self::Item { quantity, unit }
+        Self::Item {
+            quantity,
+            unit,
+            quantity_prices: None,
+        }
     }
 
     pub fn package(quantity: String, unit: String) -> Self {
@@ -53,6 +62,20 @@ impl RetrievePrescribingOptionsResponseCatalogPricingBasis {
         unit: String,
     ) -> Self {
         Self::Unit { quantity, unit }
+    }
+
+    pub fn item_with_quantity_prices(
+        quantity: RetrievePrescribingOptionsResponseCatalogPricingBasisItemQuantity,
+        unit: String,
+        quantity_prices: Vec<
+            RetrievePrescribingOptionsResponseCatalogPricingBasisItemQuantityPricesItem,
+        >,
+    ) -> Self {
+        Self::Item {
+            quantity,
+            unit,
+            quantity_prices: Some(quantity_prices),
+        }
     }
 
     pub fn unknown(value: serde_json::Value) -> Self {

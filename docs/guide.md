@@ -1,14 +1,14 @@
 # Rust SDK guide
 
-Async Rust applications. Request examples belong inside a function that returns a Result. [Source repository](https://github.com/affinity-health/affinity-rust) · [All SDKs](https://docs.joinaffinityai.com/guides/reference/sdks/)
+Async Rust applications. Request examples belong inside a function that returns a Result. [Source repository](https://github.com/affinity-health/affinity-rust) · [All SDKs](https://docs.affinityrx.com/guides/reference/sdks/)
 
 ## Install
 
 ```sh
-cargo add affinity-health-sdk --git https://github.com/affinity-health/affinity-rust
+cargo add affinity-health-sdk --git https://github.com/affinity-health/affinity-rust --tag v0.3.0
 ```
 
-For reproducible builds, pin the Git dependency to a commit.
+Version 0.3.0 uses the same deployed API contract as TypeScript SDK 1.16.0.
 
 ## Connect
 
@@ -209,7 +209,7 @@ if let Err(error) = practice.patients.get(patient_id, None).await {
 
 Retryability is a transport hint, not permission to repeat a clinical action with a new key.
 Keep the same key and body for an uncertain write. Validation and authorization errors require a corrected request.
-See [API errors](https://docs.joinaffinityai.com/errors/) for recovery guidance.
+See [API errors](https://docs.affinityrx.com/errors/) for recovery guidance.
 
 ## Platform directory and webhooks
 
@@ -231,4 +231,4 @@ let endpoints = api.webhooks.endpoints.list(
 ## More resources
 
 Use the same conventions for addresses, allergies, locations, team members, and nested order resources.
-[API reference](https://docs.joinaffinityai.com/api/) · [Webhooks](https://docs.joinaffinityai.com/guides/webhooks/)
+[API reference](https://docs.affinityrx.com/api/) · [Webhooks](https://docs.affinityrx.com/guides/webhooks/)

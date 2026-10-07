@@ -8,6 +8,12 @@ pub struct PlatformPublicApiSellingPricesReadSellingPriceResponse {
     #[serde(default)]
     pub version: i64,
     pub currency: PlatformPublicApiSellingPricesReadSellingPriceResponseCurrency,
+    #[serde(rename = "affinityPriceCents")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub affinity_price_cents: Option<i64>,
+    #[serde(rename = "affinityBasis")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub affinity_basis: Option<PlatformPublicApiSellingPricesReadSellingPriceResponseAffinityBasis>,
     pub basis: PlatformPublicApiSellingPricesReadSellingPriceResponseBasis,
     #[serde(rename = "purchaseAmountCents")]
     #[serde(default)]
@@ -29,6 +35,8 @@ pub struct PlatformPublicApiSellingPricesReadSellingPriceResponseBuilder {
     amount_cents: Option<i64>,
     version: Option<i64>,
     currency: Option<PlatformPublicApiSellingPricesReadSellingPriceResponseCurrency>,
+    affinity_price_cents: Option<i64>,
+    affinity_basis: Option<PlatformPublicApiSellingPricesReadSellingPriceResponseAffinityBasis>,
     basis: Option<PlatformPublicApiSellingPricesReadSellingPriceResponseBasis>,
     purchase_amount_cents: Option<i64>,
     requires_review: Option<bool>,
@@ -50,6 +58,19 @@ impl PlatformPublicApiSellingPricesReadSellingPriceResponseBuilder {
         value: PlatformPublicApiSellingPricesReadSellingPriceResponseCurrency,
     ) -> Self {
         self.currency = Some(value);
+        self
+    }
+
+    pub fn affinity_price_cents(mut self, value: i64) -> Self {
+        self.affinity_price_cents = Some(value);
+        self
+    }
+
+    pub fn affinity_basis(
+        mut self,
+        value: PlatformPublicApiSellingPricesReadSellingPriceResponseAffinityBasis,
+    ) -> Self {
+        self.affinity_basis = Some(value);
         self
     }
 
@@ -89,6 +110,8 @@ impl PlatformPublicApiSellingPricesReadSellingPriceResponseBuilder {
             currency: self
                 .currency
                 .ok_or_else(|| BuildError::missing_field("currency"))?,
+            affinity_price_cents: self.affinity_price_cents,
+            affinity_basis: self.affinity_basis,
             basis: self
                 .basis
                 .ok_or_else(|| BuildError::missing_field("basis"))?,
